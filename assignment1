@@ -44,11 +44,11 @@ public class PlayerController : MonoBehaviour {
 		pieRayBackL = Quaternion.AngleAxis (135, transform.forward) * this.transform.right;
 		pieRayBackR = Quaternion.AngleAxis (-135, transform.forward) * this.transform.right;
 
-		debuggerCircle.text = ("Nothing detected in the Circle Sensor");
-		debuggerRayFront.text = ("No walls in front of you");
-		debuggerRayRight.text = ("No walls to your left");
-		debuggerRayLeft.text = ("No walls in your right");
-		debuggerPie.text = ("Nothing found in the Pie Sensor");
+		debuggerCircle.text = ("Nothing detected in the Circle Sensor.");
+		debuggerRayFront.text = ("No walls in front of you.");
+		debuggerRayRight.text = ("No walls to your left.");
+		debuggerRayLeft.text = ("No walls in your right.");
+		debuggerPie.text = ("Nothing found in the Pie Sensor.");
 		
 		// Wall Sensors
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, this.transform.right, 2, wallLayerMask);
@@ -90,9 +90,9 @@ public class PlayerController : MonoBehaviour {
 			float angle = Vector3.Angle (targetDir, ourHeading);
 
 			if(dirNum == -1)
-				debuggerCircle.text += "Detected "+distanceFromPlayer+" units away.\n "+angle+" degrees to the left.\n";
+				debuggerCircle.text += "Detected "+distanceFromPlayer+" units away,\n "+angle+" degrees to the left.\n";
 			else
-				debuggerCircle.text += ("Detected "+distanceFromPlayer+" units away.\n "+angle+" degrees to the right.\n");
+				debuggerCircle.text += ("Detected "+distanceFromPlayer+" units away,\n "+angle+" degrees to the right.\n");
 
 			// Find number of agents in each pie slice
 			if(angle <= 45) // Quadrant 1 (in front of player)
@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour {
 		
 		}
 
-				debuggerPie.text = ("Front quadrent "+frontact+", Left quadrent "+leftact+", right quadrent "+rightact+", back quadrent "+backact);
+				debuggerPie.text = ("Front quadrant "+frontact+", \nLeft quadrant "+leftact+", \nRight quadrant "+rightact+", \nBack quadrant "+backact+".");
 
 		// Show the feeler rays for debugging
 		if (showFeelers == true) {
