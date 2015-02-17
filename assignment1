@@ -1,0 +1,223 @@
+using UnityEngine;
+using System.Collections;
+
+public class PlayerController : MonoBehaviour {
+	
+	public float moveSpeed;
+	public float turnSpeed;
+	public bool showFeelers;
+	public bool showPie;
+	public GUIText debuggerRayFront;
+	public GUIText debuggerRayLeft;
+	public GUIText debuggerRayRight;
+	public GUIText debuggerPie;
+	public GUIText debuggerCircle;
+	public int leftact;
+	public int backact;
+	public int frontact;
+	public int rightact;
+	
+	private Vector3 moveDirection;
+	private float distanceAhead;
+	private float distanceLeft;
+	private float distanceRight;
+	private Vector3 rightRay;
+	private Vector3 leftRay;
+	private Vector3 pieRayFrontL;
+	private Vector3 pieRayFrontR;
+	private Vector3 pieRayBackL;
+	private Vector3 pieRayBackR;
+
+	void FixedUpdate() {
+
+		int wallLayerMask = 1 << 9;
+		int agentLayerMask = 1 << 8;
+		leftact=0;
+		backact=0;
+		frontact=0;
+		rightact=0;
+
+		rightRay = Quaternion.AngleAxis (-45, transform.forward) * this.transform.right;
+		leftRay = Quaternion.AngleAxis (45, transform.forward) * this.transform.right;
+		pieRayFrontL = Quaternion.AngleAxis (45, transform.forward) * this.transform.right;
+		pieRayFrontR = Quaternion.AngleAxis (-45, transform.forward) * this.transform.right;
+		pieRayBackL = Quaternion.AngleAxis (135, transform.forward) * this.transform.right;
+		pieRayBackR = Quaternion.AngleAxis (-135, transform.forward) * this.transform.right;
+
+		debuggerCircle.text = ("Nothing detected in the Circle Sensor");
+		debuggerRayFront.text = ("No walls in front of you");
+		debuggerRayRight.text = ("No walls to your left");
+		debuggerRayLeft.text = ("No walls in your right");
+		debuggerPie.text = ("Nothing found in the Pie Sensor");
+		
+		// Wall Sensors
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, this.transform.right, 2, wallLayerMask);
+		RaycastHit2D hitRight = Physics2D.Raycast(transform.position, rightRay, 2, wallLayerMask);
+		RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, leftRay, 2, wallLayerMask);
+
+		// Front wall sensor
+		if (hit.collider != null) {
+			distanceAhead = Mathf.Abs(hit.point.y - transform.position.y);
+			debuggerRayFront.text = ("Distance:"+distanceAhead +" from \n" +hit.collider+"\n ahead.");
+		}
+		// Right wall sensor
+		if (hitRight.collider != null) {
+			distanceRight = Mathf.Abs(hitRight.point.y - transform.position.y);
+			debuggerRayRight.text = ("Distance:"+distanceRight +"from \n" +hitRight.collider+"\non the right.");
+		}
+		// Left wall sensor
+		if (hitLeft.collider != null) {
+			distanceLeft = Mathf.Abs(hitLeft.point.y - transform.position.y);
+			debuggerRayLeft.text = ("Distance:" +distanceLeft +"from \n" +hitLeft.collider+"\non the left");
+		}
+
+		int i;
+		// Activation levels for each pie slice
+		int actLevel1 = 0, actLevel2 = 0, actLevel3 = 0, actLevel4 = 0;
+
+		RaycastHit2D[] hit1 = Physics2D.CircleCastAll(transform.position,2,this.transform.right,0, agentLayerMask);
+		
+	if(hit1.Length!=0)debuggerCircle.text = "";
+	
+		for (i=0; i<hit1.Length; i++) {
+			// Find how far the agent is from player
+			float distanceFromPlayer = Mathf.Abs (hit1 [i].point.y - transform.position.y);
+
+			// Find the relative heading
+			Vector3 targetDir = hit1[i].transform.position - transform.position;
+			float dirNum = AngleDir(transform.forward, targetDir, transform.right);
+			Vector3 ourHeading = transform.right;
+			float angle = Vector3.Angle (targetDir, ourHeading);
+
+			if(dirNum == -1)
+				debuggerCircle.text += "Detected "+distanceFromPlayer+" units away.\n "+angle+" degrees to the left.\n";
+			else
+				debuggerCircle.text += ("Detected "+distanceFromPlayer+" units away.\n "+angle+" degrees to the right.\n");
+
+			// Find number of agents in each pie slice
+			if(angle <= 45) // Quadrant 1 (in front of player)
+				actLevel1++;
+			else if(angle <= 135)
+			{
+				if(dirNum == -1) // Quadrant 2 (left of player)
+					actLevel2++;
+				else             // Quadrant 3 (right of player)
+					actLevel3++;
+			}
+			else                 // Quadrant 4 (behind player)
+				actLevel4++;
+
+			if(actLevel1 != 0)
+			{
+				frontact++;
+				actLevel1 = 0;
+			}
+			else if(actLevel2 != 0)
+			{
+				actLevel2 = 0;
+				leftact++;
+			}
+			else if(actLevel3 != 0)
+			{
+				actLevel3 = 0;
+				rightact++;
+			}
+			else if(actLevel4 != 0)
+			{
+				actLevel4 = 0;
+				backact++;
+			}
+
+
+		
+		}
+
+				debuggerPie.text = ("Front quadrent "+frontact+", Left quadrent "+leftact+", right quadrent "+rightact+", back quadrent "+backact);
+
+		// Show the feeler rays for debugging
+		if (showFeelers == true) {
+						Debug.DrawRay (transform.position, this.transform.right * 2, Color.red);
+						Debug.DrawRay (transform.position, rightRay * 2, Color.red);
+						Debug.DrawRay (transform.position, leftRay * 2, Color.red);
+				}
+
+		// Show the pie slices for debugging
+		if (showPie == true) {
+						Debug.DrawRay (transform.position, pieRayFrontL * 2, Color.magenta);
+						Debug.DrawRay (transform.position, pieRayFrontR * 2, Color.magenta);
+						Debug.DrawRay (transform.position, pieRayBackL * 2, Color.magenta);
+						Debug.DrawRay (transform.position, pieRayBackR * 2, Color.magenta);
+				}
+	}
+
+	// Use this for initialization
+	void Start () {
+
+	}
+
+	void OnDrawGizmos() {
+		// Show the adjacent agent sensor circle for debugging
+		Gizmos.color = Color.green;
+		Gizmos.DrawWireSphere (transform.position, 2);
+	}
+
+	// Update is called once per frame
+	void Update () {
+
+		if(Input.GetKey (KeyCode.UpArrow)) { // Move Forward
+			transform.Translate (Vector3.right * moveSpeed * Time.deltaTime);
+		}
+		if (Input.GetKey (KeyCode.DownArrow)) { // Move Backward
+			transform.Translate (-Vector3.right * moveSpeed * Time.deltaTime);
+		}
+		if (Input.GetKey (KeyCode.RightArrow)) { // Rotate Right
+			transform.Rotate (-Vector3.forward);
+		}
+		if (Input.GetKey (KeyCode.LeftArrow)) { // Rotate Left
+			transform.Rotate(Vector3.forward);
+		}
+	
+		EnforceBounds (); // Stay on screen
+	}
+
+	// Returns -1 if left of player heading, 1 if right	
+	float AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up) {
+		Vector3 perp = Vector3.Cross(fwd, targetDir);
+		float dir = Vector3.Dot(perp, up);
+		
+		if (dir > 0f) {
+			return 1f;
+		} else if (dir < 0f) {
+			return -1f;
+		} else {
+			return 0f;
+		}
+	}
+	
+	private void EnforceBounds()
+	{
+		// 1
+		Vector3 newPosition = transform.position; 
+		Camera mainCamera = Camera.main;
+		Vector3 cameraPosition = mainCamera.transform.position;
+		
+		// 2
+		float xDist = mainCamera.aspect * mainCamera.orthographicSize; 
+		float xMax = cameraPosition.x + xDist;
+		float xMin = cameraPosition.x - xDist;
+		float yMax = mainCamera.orthographicSize;
+		
+		// 3
+		if ( newPosition.x < xMin || newPosition.x > xMax ) {
+			newPosition.x = Mathf.Clamp( newPosition.x, xMin, xMax );
+			moveDirection.x = -moveDirection.x;
+		}
+		// TODO vertical bounds
+		if (newPosition.y < -yMax || newPosition.y > yMax) {
+			newPosition.y = Mathf.Clamp( newPosition.y, -yMax, yMax );
+			moveDirection.y = -moveDirection.y;
+		} 
+		// 4
+		transform.position = newPosition;
+	}
+}
