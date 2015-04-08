@@ -47,6 +47,11 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\UIInformation.cs" />
+     <None Include="Assets\DinkyDungeon_Tileset\__Readme.txt" />
+     <None Include="Assets\DinkyDungeon_Tileset\Backwards Shader.shader" />
+ <Reference Include="Assembly-UnityScript-firstpass">
+ <HintPath>C:/Users/jgren_000/SkyDrive/School/Spring 2015/CAP 4053 - AI for Game Programming/CAP4053-Group1FinalProject/Group1_Final/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>
