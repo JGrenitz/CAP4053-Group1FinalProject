@@ -46,9 +46,30 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\AnimationSelector.cs" />
+     <Compile Include="Assets\Scripts\AttachCat.cs" />
+     <Compile Include="Assets\Scripts\AttachSword.cs" />
+     <Compile Include="Assets\Scripts\CatBullet.cs" />
+     <Compile Include="Assets\Scripts\CatGun.cs" />
+     <Compile Include="Assets\Scripts\CharacterMotor.cs" />
+     <Compile Include="Assets\Scripts\FPSInputController.cs" />
+     <Compile Include="Assets\Scripts\LookAtMouse.cs" />
+     <Compile Include="Assets\Scripts\OrcAttachWeapon.cs" />
+     <Compile Include="Assets\Scripts\OrcController.cs" />
+     <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\UIInformation.cs" />
+     <None Include="Assets\Fantasy Enemy Pack 01\Mushroom Monster\Read me.txt" />
      <None Include="Assets\DinkyDungeon_Tileset\__Readme.txt" />
+     <None Include="Assets\Fantasy Enemy Pack 01\Crawling Bug\Read me.txt" />
+     <None Include="Assets\iMG Explosion FX\ReadME.txt" />
+     <None Include="Assets\Fantasy Enemy Pack 01\Masked Orc\Read Me.txt" />
+     <None Include="Assets\cu_cat\Shaders\CuCatShader.shader" />
+     <None Include="Assets\Fantasy Enemy Pack 01\Magma Demon\Read me.txt" />
+     <None Include="Assets\Fantasy Enemy Pack 01\Plant Monster\Read me.txt" />
+     <None Include="Assets\Fantasy Enemy Pack 01\Monster Cat Bat\Read me.txt" />
      <None Include="Assets\DinkyDungeon_Tileset\Backwards Shader.shader" />
+     <None Include="Assets\Fantasy Enemy Pack 01\Flower Monster\Read me.txt" />
+     <None Include="Assets\Fantasy Enemy Pack 01\Monster Hornet\Read me.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>J:/Unity PRO (c)/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>
