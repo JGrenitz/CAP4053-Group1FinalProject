@@ -8,9 +8,9 @@ public class PlayerController : MonoBehaviour {
 	private AnimationSelector animSelector;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		animSelector = GetComponent<AnimationSelector>();
-		hp = 50;
+		hp = 300;
 		alive = true;
 	}
 	
@@ -20,7 +20,6 @@ public class PlayerController : MonoBehaviour {
 			if(hp <= 0){
 				animSelector.die ();
 				alive = false;
-				print(alive);
 			}
 			else
 				animSelector.animate ();
@@ -29,9 +28,8 @@ public class PlayerController : MonoBehaviour {
 
 
 	void OnCollisionEnter(Collision collision){
-		//if(collision.collider.tag == "axe"){
+		if(collision.collider.tag == "enemyweapon" || collision.collider.tag == "catarrow"){
 			hp -= 10;
-			print("player hp:"+hp);
-		//}
+		}
 	}
 }
