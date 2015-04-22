@@ -65,7 +65,6 @@ public class OpenClose : MonoBehaviour {
 				exp.roomClear ();
 				enemies.destroyDead ();
 				if(exp.numRooms == exp.toLevel){
-					exp.levelUp ();
 					ga.sortByFitness ();
 					ga.evolve ();
 					ga.shufflePopulation();

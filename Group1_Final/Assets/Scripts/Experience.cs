@@ -13,22 +13,27 @@ public class Experience : MonoBehaviour {
 	public Text meleeDamage;
 	public Text rangedDamage;
 
+	private PlayerController player;
+
 
 	// Use this for initialization
 	void Start () {
 		currLevel = 0;
-		numRooms = 0;
+		numRooms = 2;
 		toLevel = 3;
 		levelText.text = "" + (currLevel + 1);
 		xpSlider.value = numRooms;
 		xpSlider.maxValue = toLevel;
+		player = GameObject.Find ("Warrior").GetComponent<PlayerController> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		meleeDamage.text = "" + player.GetComponent<PlayerController> ().melee;
+		rangedDamage.text = "" + player.GetComponent<PlayerController> ().ranged;
 	}
 
-	private void levelUp(){
+	public void levelUp(){
 		numRooms = 0;
 		currLevel++;
 		toLevel = (currLevel * 2) + 3;
@@ -51,22 +56,26 @@ public class Experience : MonoBehaviour {
 	}
 
 	void changeStats(){
-		int currMelee = 5;/*Read in character damage to int*/
-		int currRanged = 5;/*Read in character damage to int*/
+		int currMelee = player.GetComponent<PlayerController> ().melee;/*Read in character damage to int*/
+		int currRanged = player.GetComponent<PlayerController> ().ranged;/*Read in character damage to int*/
 
-		int numMeleeHits = 100;//Read in number of hits the character had.
-		int numRangedHits = 100;
+		float numMeleeHits = player.GetComponent<PlayerController> ().numMelee++;
+		float numRangedHits = player.GetComponent<PlayerController> ().numRanged++;
 
-		int currHealth = 100; //Get max hp from player.
+		int currHealth = 100+(20*currLevel);
+		player.hp = currHealth;//Get max hp from player.
 
-		int changeMelee = 15 * (numMeleeHits/(numMeleeHits + numRangedHits));
+		int changeMelee = (int)Mathf.Floor(15 * (numMeleeHits/(numMeleeHits + numRangedHits)));
 		currMelee += 5 + changeMelee;
 		currRanged += 5 + (15 - changeMelee);
-		currHealth += 20;
 
 		healthSlider.maxValue = currHealth;
 		healthSlider.value = currHealth;
 		meleeDamage.text = "" + currMelee;
+		player.GetComponent<PlayerController> ().melee = currMelee;
 		rangedDamage.text = "" + currRanged;
+		player.GetComponent<PlayerController> ().ranged = currRanged;
+		player.GetComponent<PlayerController> ().numMelee = 0;
+		player.GetComponent<PlayerController> ().numRanged = 0;
 	}
 }

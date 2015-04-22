@@ -6,6 +6,7 @@ public class OrcRangedController : MonoBehaviour {
 	public int hp;
 	public bool alive;
 	public float fitness;
+	public int damage;
 
 	private float moveSpeed;	
 	private float rotateSpeed;
@@ -25,6 +26,7 @@ public class OrcRangedController : MonoBehaviour {
 		rotateSpeed = 100.0f;
 		animSelector = GetComponentsInChildren<OrcAnimationSelector>();
 		hp = 50;
+		damage = 5;
 		alive = true;
 		net = GetComponent<NeuralNet>();
 		rays = GetComponent<Sensors>();
@@ -76,10 +78,16 @@ public class OrcRangedController : MonoBehaviour {
 	
 	void OnCollisionEnter(Collision collision){
 		if(alive){
-			if((collision.collider.tag == "playerweapon" && collision.collider.GetComponentInParent<AnimationSelector>().attacking) 
-				|| collision.collider.tag == "catbullet"){
-				hp -= 10;
+			if((collision.collider.tag == "playerweapon" && collision.collider.GetComponentInParent<AnimationSelector>().attacking)){
+				hp -= player.GetComponent<PlayerController>().melee;
 				animSelector[0].hit();
+
+				player.GetComponent<PlayerController> ().numMelee++;
+			}
+			if(collision.collider.tag == "catbullet"){
+				hp -= player.GetComponent<PlayerController>().ranged;
+				
+				player.GetComponent<PlayerController> ().numRanged++;
 			}
 		}
 	}

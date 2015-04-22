@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class LizardController : MonoBehaviour {
 	public bool alive;
 	public float fitness;
+	public int damage;
 
 	private int hp;
 	private LizardAnimationSelector[] animSelector;
@@ -21,6 +22,7 @@ public class LizardController : MonoBehaviour {
 	void Start () {
 		fitness = 0;
 		hp = 50;
+		damage = 5;
 		moveSpeed = 2.0f;
 		rotateSpeed = 100.0f;
 		alive = true;
@@ -74,10 +76,15 @@ public class LizardController : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision){
 		if(alive){
-			if((collision.collider.tag == "playerweapon" && collision.collider.GetComponentInParent<AnimationSelector>().attacking)
-				|| collision.collider.tag == "catbullet"){
-				hp -= 10;
+			if((collision.collider.tag == "playerweapon" && collision.collider.GetComponentInParent<AnimationSelector>().attacking)){
+				hp -= player.GetComponent<PlayerController>().melee;
 				animSelector[0].hit();
+				
+				player.GetComponent<PlayerController> ().numMelee++;
+			}
+			if(collision.collider.tag == "catbullet"){
+				hp -= player.GetComponent<PlayerController>().ranged;
+				player.GetComponent<PlayerController> ().numRanged++;
 			}
 		}
 	}
