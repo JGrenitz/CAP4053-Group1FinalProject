@@ -8,18 +8,19 @@ public class PlayerController : MonoBehaviour {
 	private AnimationSelector animSelector;
 
 	// Use this for initialization
-	void Awake () {
+	void Start () {
 		animSelector = GetComponent<AnimationSelector>();
-		hp = 300;
+		hp = 30000;
 		alive = true;
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void FixedUpdate () {	
 		if(alive){
 			if(hp <= 0){
 				animSelector.die ();
 				alive = false;
+				print(alive);
 			}
 			else
 				animSelector.animate ();
@@ -28,7 +29,13 @@ public class PlayerController : MonoBehaviour {
 
 
 	void OnCollisionEnter(Collision collision){
-		if(collision.collider.tag == "enemyweapon" || collision.collider.tag == "catarrow"){
+		if(collision.collider.tag == "catarrow"){
+			hp -= 10;
+		}
+	}
+
+	void OnTriggerEnter(Collider other){
+		if(other.tag == "enemyweapon" && other.GetComponentInParent<LizardAnimationSelector>().attacking){
 			hp -= 10;
 		}
 	}

@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\CatBullet.cs" />
      <Compile Include="Assets\Scripts\CatGun.cs" />
      <Compile Include="Assets\Scripts\CharacterMotor.cs" />
+     <Compile Include="Assets\Scripts\Experience.cs" />
      <Compile Include="Assets\Scripts\FPSInputController.cs" />
      <Compile Include="Assets\Scripts\LookAtMouse.cs" />
      <Compile Include="Assets\Scripts\OrcAttachWeapon.cs" />
